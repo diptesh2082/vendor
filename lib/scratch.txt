@@ -1,0 +1,3 @@
+Locality
+sublocality
+lat, long, pincode
