@@ -30,7 +30,8 @@ class FirebaseFirestoreAPi {
     }
   }
 
-  Future updateLocationtoDatabase(double lat, double long) async {
+  Future updateLocationtoDatabase(
+      double lat, double long, String pincode, String address) async {
     try {
       _firestore
           .collection('product_details')
@@ -38,6 +39,8 @@ class FirebaseFirestoreAPi {
           .update(
         {
           "location": GeoPoint(lat, long),
+          "pincode": pincode,
+          "address": address
         },
       ).then((value) => print("Location is Updated to Database"));
     } catch (e) {
