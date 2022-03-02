@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vyam_vandor/Screens/booking_summary_screen.dart';
 import 'package:vyam_vandor/Screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'PoppinsRegular',
       ),
-      home: const LoginScreen(),
+      home: const BookingScreen(),
     );
   }
 }

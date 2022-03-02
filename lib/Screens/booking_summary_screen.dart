@@ -49,7 +49,7 @@ class _BookingScreenState extends State<BookingScreen> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Row(
                       children: [
                         Image.asset(
@@ -90,9 +90,9 @@ class _BookingScreenState extends State<BookingScreen> {
                             const SizedBox(
                               height: 15.0,
                             ),
-                            SingleChildScrollView(
+                            const SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
-                              child: const Text(
+                              child: Text(
                                 'Bus stand, Barvsdv',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -117,7 +117,8 @@ class _BookingScreenState extends State<BookingScreen> {
                     height: 15.0,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -214,17 +215,39 @@ class _BookingScreenState extends State<BookingScreen> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0)),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  hintText: 'Enter OTP',
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    color: Color(0xffC9C9C9),
+              child: Stack(
+                children: [
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      hintText: 'Enter OTP',
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color(0xffC9C9C9),
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        //Function for Verifying OTP
+                      },
+                      child: const Text(
+                        'Verify',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            AppColors.bottomNaVBarTextColor),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ), //Container For payment
             const SizedBox(
