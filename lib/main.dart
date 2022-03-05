@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vyam_vandor/Screens/booking_summary_screen.dart';
+import 'package:vyam_vandor/Screens/home__screen.dart';
 import 'package:vyam_vandor/Screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:vyam_vandor/Screens/order_details_screen.dart';
+import 'package:vyam_vandor/widgets/stream_gyms.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'PoppinsRegular',
       ),
-      home: const BookingScreen(),
+      home: const HomeScreen(),
     );
   }
 }

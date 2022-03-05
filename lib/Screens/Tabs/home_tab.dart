@@ -4,6 +4,7 @@ import 'package:vyam_vandor/app_colors.dart';
 
 import '../../widgets/active_booking.dart';
 import '../../widgets/booking_card.dart';
+import '../../widgets/custom_dropdown.dart';
 import '../../widgets/drawer_tile.dart';
 
 class HomeTab extends StatefulWidget {
@@ -20,59 +21,97 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        appBar: buildAppBar(context),
-        drawer: buildDrawer(context),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: ListView(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 20,
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: AppColors.backgroundColor,
+            appBar: buildAppBar(context),
+            drawer: buildDrawer(context),
+            body: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  status
+                      ? Container()
+                      : Center(
+                          child: Image.asset("Assets/Images/no_bookings.png"),
+                        ),
+                  !status
+                      ? Container()
+                      : const ExpansionTile(
+                          title: Text('Upcoming Bookings'),
+                          textColor: Colors.black,
+                          children: [
+                            BookingCard(),
+                            BookingCard(),
+                            BookingCard(),
+                          ],
+                        ),
+                  !status
+                      ? Container()
+                      : const ExpansionTile(
+                          title: Text('Active Bookings Bookings'),
+                          children: [
+                            ActiveBookingCard(),
+                            ActiveBookingCard(),
+                          ],
+                        ),
+                  !status
+                      ? Container()
+                      : const ExpansionTile(
+                          title: Text('Past Bookings'),
+                          children: [
+                            BookingCard(),
+                            BookingCard(),
+                            BookingCard(),
+                          ],
+                        ),
+                ],
               ),
-              status
-                  ? Container()
-                  : Center(
-                      child: Image.asset("Assets/Images/no_bookings.png"),
-                    ),
-              !status
-                  ? Container()
-                  : ExpansionTile(
-                      title: Text('Upcoming Bookings'),
-                      textColor: Colors.black,
-                      children: [
-                        BookingCard(),
-                        BookingCard(),
-                        BookingCard(),
-                      ],
-                    ),
-              !status
-                  ? Container()
-                  : ExpansionTile(
-                      title: Text('Active Bookings Bookings'),
-                      children: [
-                        ActiveBookingCard(),
-                        ActiveBookingCard(),
-                      ],
-                    ),
-              !status
-                  ? Container()
-                  : ExpansionTile(
-                      title: Text('Past Bookings'),
-                      children: [
-                        BookingCard(),
-                        BookingCard(),
-                        BookingCard(),
-                      ],
-                    ),
-            ],
+            ),
           ),
-        ),
+          showBranches == true
+              ? Positioned(
+                  top: 80,
+                  left: 51,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    width: 280,
+                    height: 300,
+                    child: ListView.separated(
+                      itemBuilder: ((context, index) => const ListTile(
+                            title: Text(
+                              'Ghaziabad',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              'Branch Asansol',
+                              style: TextStyle(
+                                color: Color(0xfffBDBDBD),
+                              ),
+                            ),
+                          )),
+                      separatorBuilder: (context, index) => const Divider(
+                        color: Color(0xffD6D6D6),
+                      ),
+                      itemCount: 4,
+                    ),
+                  ),
+                )
+              : Container()
+        ],
       ),
     );
   }
+
+  var showBranches = true;
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
@@ -82,16 +121,6 @@ class _HomeTabState extends State<HomeTab> {
       iconTheme: const IconThemeData(color: Colors.black),
       titleSpacing: 0,
       elevation: 0,
-      leading: IconButton(
-        onPressed: () {
-          //TODO: See Opening Drawer;
-        },
-        icon: Image.asset(
-          "Assets/Images/menu.png",
-          scale: 1,
-          color: Colors.black,
-        ),
-      ),
       title: const Text(
         'Transformers Gym',
         style: TextStyle(
@@ -103,19 +132,35 @@ class _HomeTabState extends State<HomeTab> {
       ),
       bottom: PreferredSize(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(left: 57.0),
-                  child: Text(
-                    'Branch Barakar',
-                    style: TextStyle(
-                      color: Color(0xffBDBDBD),
+            GestureDetector(
+              onTap: () {
+                print("Open that Alert dialogue Box");
+                setState(() {
+                  showBranches = !showBranches;
+                });
+              },
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 57.0),
+                    child: Text(
+                      'Branch Barakar',
+                      style: TextStyle(
+                        color: Color(0xffBDBDBD),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Icon(
+                    !showBranches
+                        ? Icons.keyboard_arrow_down
+                        : Icons.keyboard_arrow_up,
+                    color: Color(0xff130F26),
+                    size: 20,
+                  )
+                ],
+              ),
             ),
             const SizedBox(
               height: 15,
