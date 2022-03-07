@@ -10,4 +10,9 @@ class FirebaseCollectionAndDocsApi {
       .doc("ompranaykumar@gmail.com")
       .collection("gym")
       .snapshots();
+
+  get gymDetails => _firbaseFirestore
+      .collection("product_details")
+      .doc("mahtab5752@gmail.com")
+      .get();
 }

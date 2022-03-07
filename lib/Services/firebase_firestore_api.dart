@@ -30,6 +30,22 @@ class FirebaseFirestoreAPi {
     }
   }
 
+  Future updateGymStatusToFirestore({bool? isGymOpened}) async {
+    try {
+      //TODO: Change docID to logged in user ID
+      _firestore
+          .collection('product_details')
+          .doc("mahtab5752@gmail.com")
+          .update({
+        "gym_status": isGymOpened!,
+      });
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
   Future updateLocationtoDatabase(
       double lat, double long, String pincode, String address) async {
     try {
