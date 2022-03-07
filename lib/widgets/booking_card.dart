@@ -3,7 +3,20 @@ import 'package:flutter/material.dart';
 class BookingCard extends StatelessWidget {
   const BookingCard({
     Key? key,
+    this.userName,
+    this.bookingID,
+    this.bookingdate,
+    this.bookingPlan,
+    this.bookingPrice,
+    this.userID,
   }) : super(key: key);
+
+  final String? userName;
+  final String? bookingID;
+  final String? bookingdate;
+  final String? bookingPlan;
+  final double? bookingPrice;
+  final String? userID;
 
   @override
   Widget build(BuildContext context) {

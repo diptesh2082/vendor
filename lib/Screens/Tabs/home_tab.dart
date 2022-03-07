@@ -15,7 +15,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  var status = false;
+  var status = true;
   final GlobalKey<ScaffoldState> _drawerkey = GlobalKey();
 
   @override
@@ -46,48 +46,52 @@ class _HomeTabState extends State<HomeTab> {
                   drawer: buildDrawer(context),
                   body: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: ListView(
                       children: [
-                        const SizedBox(
-                          height: 20,
+                        Column(
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // status
+                            //     ? Container()
+                            //     : Center(
+                            //         child: Image.asset(
+                            //             "Assets/Images/no_bookings.png"),
+                            //       ),
+                            !!status
+                                ? Container()
+                                : const ExpansionTile(
+                                    title: Text('Upcoming Bookings'),
+                                    textColor: Colors.black,
+                                    children: [
+                                      BookingCard(),
+                                      BookingCard(),
+                                      BookingCard(),
+                                    ],
+                                  ),
+                            !!status
+                                ? Container()
+                                : const ExpansionTile(
+                                    title: Text('Active Bookings Bookings'),
+                                    children: [
+                                      ActiveBookingCard(),
+                                      ActiveBookingCard(),
+                                    ],
+                                  ),
+                            !!status
+                                ? Container()
+                                : const ExpansionTile(
+                                    title: Text('Past Bookings'),
+                                    children: [
+                                      BookingCard(),
+                                      BookingCard(),
+                                      BookingCard(),
+                                    ],
+                                  ),
+                          ],
                         ),
-                        status
-                            ? Container()
-                            : Center(
-                                child: Image.asset(
-                                    "Assets/Images/no_bookings.png"),
-                              ),
-                        !status
-                            ? Container()
-                            : const ExpansionTile(
-                                title: Text('Upcoming Bookings'),
-                                textColor: Colors.black,
-                                children: [
-                                  BookingCard(),
-                                  BookingCard(),
-                                  BookingCard(),
-                                ],
-                              ),
-                        !status
-                            ? Container()
-                            : const ExpansionTile(
-                                title: Text('Active Bookings Bookings'),
-                                children: [
-                                  ActiveBookingCard(),
-                                  ActiveBookingCard(),
-                                ],
-                              ),
-                        !status
-                            ? Container()
-                            : const ExpansionTile(
-                                title: Text('Past Bookings'),
-                                children: [
-                                  BookingCard(),
-                                  BookingCard(),
-                                  BookingCard(),
-                                ],
-                              ),
                       ],
                     ),
                   ),
