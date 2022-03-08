@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vyam_vandor/widgets/booking_card.dart';
+
+import '../widgets/active_booking.dart';
 
 class FirebaseFirestoreAPi {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -43,6 +46,58 @@ class FirebaseFirestoreAPi {
       print(
         e.toString(),
       );
+    }
+  }
+
+  Future getUpComingBookings() async {
+    List<BookingCard> list = [];
+
+    try {
+      QuerySnapshot querysnapshot = await _firestore
+          .collection('bookings')
+          .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
+          .get();
+      for (var snap in querysnapshot.docs) {
+        if (snap.get("booking_status") == "u") {
+          list.add(BookingCard(
+            userName: snap.get("user_name"),
+            userID: snap.get("userId"),
+            bookingPrice: snap.get("booking_price"),
+            bookingPlan: snap.get("booking_plan"),
+            bookingID: snap.get("booking_id"),
+            bookingdate: snap.get("booking_date").toString(),
+          ));
+        }
+      }
+      return list;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future getUpActiveBookings() async {
+    List<ActiveBookingCard> list = [];
+
+    try {
+      QuerySnapshot querysnapshot = await _firestore
+          .collection('bookings')
+          .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
+          .get();
+      for (var snap in querysnapshot.docs) {
+        if (snap.get("booking_status") == "a") {
+          list.add(ActiveBookingCard(
+            userName: snap.get("user_name"),
+            userID: snap.get("userId"),
+            bookingPrice: snap.get("booking_price"),
+            bookingPlan: snap.get("booking_plan"),
+            bookingID: snap.get("booking_id"),
+            bookingdate: snap.get("booking_date").toString(),
+          ));
+        }
+      }
+      return list;
+    } catch (e) {
+      print(e);
     }
   }
 

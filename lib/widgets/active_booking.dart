@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class ActiveBookingCard extends StatelessWidget {
   const ActiveBookingCard({
     Key? key,
-    this.userName,
-    this.bookingID,
-    this.bookingdate,
-    this.bookingPlan,
-    this.bookingPrice,
-    this.userID,
+    required this.userName,
+    required this.bookingID,
+    required this.bookingdate,
+    required this.bookingPlan,
+    required this.bookingPrice,
+    required this.userID,
   }) : super(key: key);
   final String? userName;
   final String? bookingID;
@@ -31,22 +31,24 @@ class ActiveBookingCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               Text(
-                'Booking ID - 22',
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
+                'Booking ID - ${bookingID!}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
               ),
               Text(
-                'John Doe',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                userName!,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
               ),
               Text(
-                '07 Feb - 01 March',
-                style: TextStyle(fontWeight: FontWeight.w500),
+                bookingdate!,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               Text(
-                'Per Day',
-                style: TextStyle(fontWeight: FontWeight.w500),
+                bookingPlan!,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -54,11 +56,12 @@ class ActiveBookingCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 18.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 18.0),
                 child: Text(
-                  '\$ 20',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  '\$$bookingPrice!',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 18),
                 ),
               ),
               const Text(

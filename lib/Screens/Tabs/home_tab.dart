@@ -18,6 +18,40 @@ class _HomeTabState extends State<HomeTab> {
   var status = true;
   final GlobalKey<ScaffoldState> _drawerkey = GlobalKey();
 
+  late List<BookingCard>? _upCominglist = [];
+  late List<ActiveBookingCard>? _activeBookingsList = [];
+
+  setUpcomingBookings() async {
+    try {
+      List<BookingCard> temp =
+          await FirebaseFirestoreAPi().getUpComingBookings();
+      setState(() {
+        _upCominglist = temp;
+      });
+    } catch (e) {
+      print(" $e /////////////////");
+    }
+  }
+
+  setActiveBookings() async {
+    try {
+      List<ActiveBookingCard> temp =
+          await FirebaseFirestoreAPi().getUpActiveBookings();
+      setState(() {
+        _activeBookingsList = temp;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setActiveBookings();
+    setUpcomingBookings();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,6 +73,11 @@ class _HomeTabState extends State<HomeTab> {
               children: [
                 Scaffold(
                   backgroundColor: AppColors.backgroundColor,
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      print(_upCominglist![0].bookingID);
+                    },
+                  ),
                   appBar: buildAppBar(context,
                       isGymOpened: snapshot.data!.get("gym_status"),
                       gymLocation: snapshot.data!.get("landmark"),
@@ -60,36 +99,19 @@ class _HomeTabState extends State<HomeTab> {
                             //         child: Image.asset(
                             //             "Assets/Images/no_bookings.png"),
                             //       ),
-                            !!status
-                                ? Container()
-                                : const ExpansionTile(
-                                    title: Text('Upcoming Bookings'),
-                                    textColor: Colors.black,
-                                    children: [
-                                      BookingCard(),
-                                      BookingCard(),
-                                      BookingCard(),
-                                    ],
-                                  ),
-                            !!status
-                                ? Container()
-                                : const ExpansionTile(
-                                    title: Text('Active Bookings Bookings'),
-                                    children: [
-                                      ActiveBookingCard(),
-                                      ActiveBookingCard(),
-                                    ],
-                                  ),
-                            !!status
-                                ? Container()
-                                : const ExpansionTile(
-                                    title: Text('Past Bookings'),
-                                    children: [
-                                      BookingCard(),
-                                      BookingCard(),
-                                      BookingCard(),
-                                    ],
-                                  ),
+                            //_activeBookingsList
+                            ExpansionTile(
+                              title: Text('UpBookings Bookings'),
+                              children: [
+                                ..._upCominglist!,
+                              ],
+                            ),
+                            ExpansionTile(
+                              title: Text('Active Bookings Bookings'),
+                              children: [
+                                ..._activeBookingsList!,
+                              ],
+                            ),
                           ],
                         ),
                       ],
