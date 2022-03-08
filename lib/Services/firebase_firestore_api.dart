@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyam_vandor/widgets/booking_card.dart';
+import 'package:intl/intl.dart';
 
 import '../widgets/active_booking.dart';
 
@@ -75,6 +76,22 @@ class FirebaseFirestoreAPi {
     }
   }
 
+  Future acceptUpCmingBookings({required String id}) async {
+    try {
+      print("The id Of Booking is : $id");
+      await _firestore
+          .collection('bookings')
+          .doc('U4LcvYoV7dVi7wB5tt0o')
+          .update(
+        {
+          'booking_status': 'a',
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future getUpActiveBookings() async {
     List<ActiveBookingCard> list = [];
 
@@ -84,17 +101,20 @@ class FirebaseFirestoreAPi {
           .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
           .get();
       for (var snap in querysnapshot.docs) {
-        if (snap.get("booking_status") == "a") {
+        if (snap.get("booking_status") == 'a') {
           list.add(ActiveBookingCard(
             userName: snap.get("user_name"),
             userID: snap.get("userId"),
             bookingPrice: snap.get("booking_price"),
             bookingPlan: snap.get("booking_plan"),
             bookingID: snap.get("booking_id"),
-            bookingdate: snap.get("booking_date").toString(),
+            bookingdate: DateFormat.yMMMd()
+                .add_jm()
+                .format(snap.get("booking_date").toDate()),
           ));
         }
       }
+
       return list;
     } catch (e) {
       print(e);

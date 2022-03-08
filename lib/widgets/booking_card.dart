@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vyam_vandor/Screens/Tabs/home_tab.dart';
+import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 
-class BookingCard extends StatelessWidget {
+class BookingCard extends StatefulWidget {
   const BookingCard({
     Key? key,
     this.userName,
@@ -19,6 +21,11 @@ class BookingCard extends StatelessWidget {
   final String? userID;
 
   @override
+  State<BookingCard> createState() => _BookingCardState();
+}
+
+class _BookingCardState extends State<BookingCard> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
@@ -34,12 +41,12 @@ class BookingCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                'Booking ID - $bookingID',
+                'Booking ID - ${widget.bookingID}',
                 style:
                     const TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
               ),
               Text(
-                '$userName',
+                '${widget.userName}',
                 style:
                     const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
               ),
@@ -49,7 +56,7 @@ class BookingCard extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               Text(
-                '$bookingPlan',
+                '${widget.bookingPlan}',
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ],
@@ -61,13 +68,23 @@ class BookingCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 18.0),
                 child: Text(
-                  '\$ $bookingPrice',
+                  '\$ ${widget.bookingPrice}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 18),
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  try {
+                    print(widget.bookingID!);
+                    await FirebaseFirestoreAPi()
+                        .acceptUpCmingBookings(id: widget.bookingID!);
+                    FirebaseFirestoreAPi().getUpActiveBookings();
+                    FirebaseFirestoreAPi().getUpComingBookings();
+                  } catch (e) {
+                    print(e);
+                  }
+                },
                 child: const Text(
                   'Accept',
                   style: TextStyle(fontWeight: FontWeight.bold),

@@ -52,6 +52,7 @@ dev_dependencies:
   geolocator: ^8.2.0
   geocoding: ^2.0.2
   permission_handler: ^9.2.0
+  intl: ^0.17.0
   provider:
   firebase_auth: ^3.3.9
 

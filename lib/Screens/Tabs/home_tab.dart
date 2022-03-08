@@ -6,6 +6,11 @@ import 'package:vyam_vandor/provider/firebase_streams_docs.dart';
 import '../../widgets/active_booking.dart';
 import '../../widgets/booking_card.dart';
 import '../../widgets/drawer_tile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
+late List<BookingCard>? upCominglist = [];
+late List<ActiveBookingCard>? _activeBookingsList = [];
 
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -18,22 +23,19 @@ class _HomeTabState extends State<HomeTab> {
   var status = true;
   final GlobalKey<ScaffoldState> _drawerkey = GlobalKey();
 
-  late List<BookingCard>? _upCominglist = [];
-  late List<ActiveBookingCard>? _activeBookingsList = [];
-
-  setUpcomingBookings() async {
+  Future setUpcomingBookings() async {
     try {
       List<BookingCard> temp =
           await FirebaseFirestoreAPi().getUpComingBookings();
       setState(() {
-        _upCominglist = temp;
+        upCominglist = temp;
       });
     } catch (e) {
       print(" $e /////////////////");
     }
   }
 
-  setActiveBookings() async {
+  Future setActiveBookings() async {
     try {
       List<ActiveBookingCard> temp =
           await FirebaseFirestoreAPi().getUpActiveBookings();
@@ -75,7 +77,7 @@ class _HomeTabState extends State<HomeTab> {
                   backgroundColor: AppColors.backgroundColor,
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
-                      print(_upCominglist![0].bookingID);
+                      setState(() {});
                     },
                   ),
                   appBar: buildAppBar(context,
@@ -100,16 +102,106 @@ class _HomeTabState extends State<HomeTab> {
                             //             "Assets/Images/no_bookings.png"),
                             //       ),
                             //_activeBookingsList
+
+                            //TODO: set The vendor ID;
                             ExpansionTile(
-                              title: Text('UpBookings Bookings'),
+                              title: const Text('UpBookings Bookings'),
                               children: [
-                                ..._upCominglist!,
+                                StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('bookings')
+                                        .where("vendorId",
+                                            isEqualTo:
+                                                "dipteshmandal555@gmail.com")
+                                        .where("booking_status", isEqualTo: 'u')
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot snap) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      if (snap.data == null) {
+                                        return const Text("");
+                                      }
+
+                                      var doc = snap.data.docs;
+                                      print(doc);
+
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: doc.length,
+                                        itemBuilder: (context, index) {
+                                          return BookingCard(
+                                            userName: doc[index]["user_name"],
+                                            userID: doc[index]["userId"],
+                                            bookingPrice: doc[index]
+                                                ["booking_price"],
+                                            bookingPlan: doc[index]
+                                                ["booking_plan"],
+                                            bookingID: doc[index]["booking_id"],
+                                            bookingdate: DateFormat.yMMMd()
+                                                .add_jm()
+                                                .format(doc[index]
+                                                        ["booking_date"]
+                                                    .toDate()),
+                                          );
+                                        },
+                                      );
+                                    })
                               ],
                             ),
                             ExpansionTile(
-                              title: Text('Active Bookings Bookings'),
+                              title: const Text('Active Bookings'),
                               children: [
-                                ..._activeBookingsList!,
+                                StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('bookings')
+                                        .where("vendorId",
+                                            isEqualTo:
+                                                "dipteshmandal555@gmail.com")
+                                        .where("booking_status", isEqualTo: 'a')
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot snap) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      if (snap.data == null) {
+                                        return const Text("");
+                                      }
+
+                                      var doc = snap.data.docs;
+                                      print(doc);
+
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: doc.length,
+                                        itemBuilder: (context, index) {
+                                          return ActiveBookingCard(
+                                            userName: doc[index]["user_name"],
+                                            userID: doc[index]["userId"],
+                                            bookingPrice: doc[index]
+                                                ["booking_price"],
+                                            bookingPlan: doc[index]
+                                                ["booking_plan"],
+                                            bookingID: doc[index]["booking_id"],
+                                            bookingdate: DateFormat.yMMMd()
+                                                .add_jm()
+                                                .format(doc[index]
+                                                        ["booking_date"]
+                                                    .toDate()),
+                                          );
+                                        },
+                                      );
+                                    })
                               ],
                             ),
                           ],

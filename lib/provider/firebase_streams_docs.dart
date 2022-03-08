@@ -15,4 +15,9 @@ class FirebaseCollectionAndDocsApi {
       .collection("product_details")
       .doc("mahtab5752@gmail.com")
       .get();
+
+  get bookingStream => _firbaseFirestore
+      .collection('bookings')
+      .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
+      .snapshots();
 }

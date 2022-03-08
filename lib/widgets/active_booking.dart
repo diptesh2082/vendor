@@ -59,7 +59,7 @@ class ActiveBookingCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 18.0),
                 child: Text(
-                  '\$$bookingPrice!',
+                  '\$$bookingPrice',
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 18),
                 ),
