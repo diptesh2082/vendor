@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:vyam_vandor/Screens/Tabs/home_tab.dart';
-import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
+import 'package:vyam_vandor/Screens/booking_summary_screen.dart';
+import 'package:get/get.dart';
 
 class BookingCard extends StatefulWidget {
-  const BookingCard({
-    Key? key,
-    this.userName,
-    this.bookingID,
-    this.bookingdate,
-    this.bookingPlan,
-    this.bookingPrice,
-    this.userID,
-  }) : super(key: key);
+  const BookingCard(
+      {Key? key,
+      this.userName = "",
+      this.bookingID = "",
+      this.bookingdate = "",
+      this.bookingPlan = "",
+      this.bookingPrice = 0.0,
+      this.userID = "",
+      this.bookings})
+      : super(key: key);
 
   final String? userName;
   final String? bookingID;
@@ -19,6 +20,7 @@ class BookingCard extends StatefulWidget {
   final String? bookingPlan;
   final double? bookingPrice;
   final String? userID;
+  final Map? bookings;
 
   @override
   State<BookingCard> createState() => _BookingCardState();
@@ -51,8 +53,8 @@ class _BookingCardState extends State<BookingCard> {
                     const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
               ),
               //TODO: Add Booking Dates to the Text Widget
-              const Text(
-                "bookingdate",
+              Text(
+                widget.bookingdate!,
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               Text(
@@ -75,15 +77,19 @@ class _BookingCardState extends State<BookingCard> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  try {
-                    print(widget.bookingID!);
-                    await FirebaseFirestoreAPi()
-                        .acceptUpCmingBookings(id: widget.bookingID!);
-                    FirebaseFirestoreAPi().getUpActiveBookings();
-                    FirebaseFirestoreAPi().getUpComingBookings();
-                  } catch (e) {
-                    print(e);
-                  }
+                  Get.to(
+                    () => BookingScreen(),
+                    arguments: {"details": widget.bookings},
+                  );
+                  // try {
+                  //   print(widget.bookingID!);
+                  //   await FirebaseFirestoreAPi()
+                  //       .acceptUpCmingBookings(id: widget.bookingID!);
+                  //   FirebaseFirestoreAPi().getUpActiveBookings();
+                  //   FirebaseFirestoreAPi().getUpComingBookings();
+                  // } catch (e) {
+                  //   print(e);
+                  // }
                 },
                 child: const Text(
                   'Accept',

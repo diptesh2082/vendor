@@ -18,6 +18,6 @@ class FirebaseCollectionAndDocsApi {
 
   get bookingStream => _firbaseFirestore
       .collection('bookings')
-      .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
+      .where("vendorId", isEqualTo: "T@gmail.com")
       .snapshots();
 }

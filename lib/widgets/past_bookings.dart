@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ActiveBookingCard extends StatefulWidget {
-  const ActiveBookingCard({
+class PastBookingCard extends StatefulWidget {
+  const PastBookingCard({
     Key? key,
     required this.userName,
     required this.bookingID,
@@ -18,10 +18,10 @@ class ActiveBookingCard extends StatefulWidget {
   final String? userID;
 
   @override
-  State<ActiveBookingCard> createState() => _ActiveBookingCardState();
+  State<PastBookingCard> createState() => _PastBookingCardState();
 }
 
-class _ActiveBookingCardState extends State<ActiveBookingCard> {
+class _PastBookingCardState extends State<PastBookingCard> {
   @override
   void initState() {
     super.initState();
@@ -83,13 +83,13 @@ class _ActiveBookingCardState extends State<ActiveBookingCard> {
                 children: const [
                   CircleAvatar(
                     radius: 3,
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.orange,
                   ),
                   SizedBox(
                     width: 3.5,
                   ),
                   Text(
-                    'Active',
+                    'Completed',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ],

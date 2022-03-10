@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vyam_vandor/Screens/booking_summary_screen.dart';
 import 'package:vyam_vandor/Screens/home__screen.dart';
-import 'package:vyam_vandor/Screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:vyam_vandor/Screens/order_details_screen.dart';
-import 'package:vyam_vandor/widgets/stream_gyms.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(

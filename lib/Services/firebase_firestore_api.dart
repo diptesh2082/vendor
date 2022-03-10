@@ -56,7 +56,7 @@ class FirebaseFirestoreAPi {
     try {
       QuerySnapshot querysnapshot = await _firestore
           .collection('bookings')
-          .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
+          .where("vendorId", isEqualTo: "T@gmail.com")
           .get();
       for (var snap in querysnapshot.docs) {
         if (snap.get("booking_status") == "u") {
@@ -98,7 +98,7 @@ class FirebaseFirestoreAPi {
     try {
       QuerySnapshot querysnapshot = await _firestore
           .collection('bookings')
-          .where("vendorId", isEqualTo: "dipteshmandal555@gmail.com")
+          .where("vendorId", isEqualTo: "T@gmail.com")
           .get();
       for (var snap in querysnapshot.docs) {
         if (snap.get("booking_status") == 'a') {
