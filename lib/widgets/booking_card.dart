@@ -11,7 +11,8 @@ class BookingCard extends StatefulWidget {
       this.bookingPlan = "",
       this.bookingPrice = 0.0,
       this.userID = "",
-      this.bookings})
+      this.bookings,
+      required this.otp})
       : super(key: key);
 
   final String? userName;
@@ -20,6 +21,7 @@ class BookingCard extends StatefulWidget {
   final String? bookingPlan;
   final double? bookingPrice;
   final String? userID;
+  final int? otp;
   final Map? bookings;
 
   @override
@@ -77,9 +79,17 @@ class _BookingCardState extends State<BookingCard> {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  print("The otp for booking is : ");
+                  print(widget.otp);
                   Get.to(
-                    () => BookingScreen(),
-                    arguments: {"details": widget.bookings},
+                    () => BookingScreen(
+                      otp: widget.otp,
+                      bookingID: widget.bookingID,
+                      userID: widget.userID,
+                    ),
+                    arguments: {
+                      "otp_pass": widget.otp,
+                    },
                   );
                   // try {
                   //   print(widget.bookingID!);

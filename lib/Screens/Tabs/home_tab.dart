@@ -103,10 +103,6 @@ class _HomeTabState extends State<HomeTab> {
                                 StreamBuilder(
                                   stream: FirebaseFirestore.instance
                                       .collectionGroup('user_booking')
-                                      // .where("vandorId",
-                                      //     isEqualTo: "T@gmail.com")
-                                      // .where("booking_status", isEqualTo: 'a'
-
                                       .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot snap) {
@@ -144,10 +140,9 @@ class _HomeTabState extends State<HomeTab> {
                                             bookingdate: doc[index]
                                                     ['booking_date'] ??
                                                 "",
-                                            bookings: doc[index],
+                                            otp: doc[index]['otp_pass'],
                                           );
                                         }
-
                                         return Container();
                                       },
                                     );

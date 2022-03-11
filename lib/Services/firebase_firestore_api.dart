@@ -50,31 +50,7 @@ class FirebaseFirestoreAPi {
     }
   }
 
-  Future getUpComingBookings() async {
-    List<BookingCard> list = [];
-
-    try {
-      QuerySnapshot querysnapshot = await _firestore
-          .collection('bookings')
-          .where("vendorId", isEqualTo: "T@gmail.com")
-          .get();
-      for (var snap in querysnapshot.docs) {
-        if (snap.get("booking_status") == "u") {
-          list.add(BookingCard(
-            userName: snap.get("user_name"),
-            userID: snap.get("userId"),
-            bookingPrice: snap.get("booking_price"),
-            bookingPlan: snap.get("booking_plan"),
-            bookingID: snap.get("booking_id"),
-            bookingdate: snap.get("booking_date").toString(),
-          ));
-        }
-      }
-      return list;
-    } catch (e) {
-      print(e);
-    }
-  }
+  Future getUpComingBookings() async {}
 
   Future acceptUpCmingBookings({required String id}) async {
     try {
@@ -87,6 +63,21 @@ class FirebaseFirestoreAPi {
           'booking_status': 'a',
         },
       );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future acceptandUpdatebookingStatus(String? bookingID, String? userID) async {
+    try {
+      _firestore
+          .collection('bookings')
+          .doc(userID!)
+          .collection('user_booking')
+          .doc(bookingID!)
+          .update({
+        "booking_status": "active",
+      });
     } catch (e) {
       print(e);
     }

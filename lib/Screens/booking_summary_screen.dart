@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:vyam_vandor/Screens/order_details_screen.dart';
+import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 import 'package:vyam_vandor/app_colors.dart';
+import 'package:get/get.dart';
 
 class BookingScreen extends StatefulWidget {
-  const BookingScreen({Key? key}) : super(key: key);
+  const BookingScreen({Key? key, this.otp, this.bookingID, this.userID})
+      : super(key: key);
+
+  final int? otp;
+
+  final String? userID;
+  final String? bookingID;
 
   @override
   _BookingScreenState createState() => _BookingScreenState();
 }
 
 class _BookingScreenState extends State<BookingScreen> {
+  @override
+  void initState() {
+    print("The otp in booking screen is : ${widget.otp}");
+    _controller = TextEditingController();
+    super.initState();
+  }
+
+  TextEditingController? _controller;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,6 +237,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 child: Stack(
                   children: [
                     TextFormField(
+                      controller: _controller,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -233,8 +252,26 @@ class _BookingScreenState extends State<BookingScreen> {
                     Positioned(
                       right: 20,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           //Function for Verifying OTP
+
+                          if (int.parse(_controller!.text) == widget.otp) {
+                            print("The otp is Verified");
+                            Get.to(
+                              const OrderDetails(),
+                            );
+                            await FirebaseFirestoreAPi()
+                                .acceptandUpdatebookingStatus(
+                                    widget.bookingID, widget.userID);
+                          } else {
+                            print("Invalid OTP");
+                            Get.showSnackbar(GetSnackBar(
+                              title: "Invalid OTP",
+                              message: "Try it again",
+                              isDismissible: true,
+                              backgroundColor: Colors.black,
+                            ));
+                          }
                         },
                         child: const Text(
                           'Verify',
