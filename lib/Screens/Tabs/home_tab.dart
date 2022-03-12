@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
+import 'package:vyam_vandor/Services/firebase_messaging.dart';
 import 'package:vyam_vandor/app_colors.dart';
 import 'package:vyam_vandor/provider/firebase_streams_docs.dart';
 import '../../widgets/active_booking.dart';
@@ -10,9 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 import '../../widgets/past_bookings.dart';
-
-late List<BookingCard>? upCominglist = [];
-late List<ActiveBookingCard>? _activeBookingsList = [];
 
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -25,35 +23,11 @@ class _HomeTabState extends State<HomeTab> {
   var status = true;
   final GlobalKey<ScaffoldState> _drawerkey = GlobalKey();
 
-  Future setUpcomingBookings() async {
-    try {
-      List<BookingCard> temp =
-          await FirebaseFirestoreAPi().getUpComingBookings();
-      setState(() {
-        upCominglist = temp;
-      });
-    } catch (e) {
-      print(" $e /////////////////");
-    }
-  }
-
-  Future setActiveBookings() async {
-    try {
-      List<ActiveBookingCard> temp =
-          await FirebaseFirestoreAPi().getUpActiveBookings();
-      setState(() {
-        _activeBookingsList = temp;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  bool showBranches = false;
 
   @override
   void initState() {
     super.initState();
-    setActiveBookings();
-    setUpcomingBookings();
   }
 
   @override
@@ -75,16 +49,24 @@ class _HomeTabState extends State<HomeTab> {
             return Stack(
               children: [
                 Scaffold(
+                  key: _drawerkey,
                   backgroundColor: AppColors.backgroundColor,
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
-                      setState(() {});
+                      FirebaseMessagingApi().getDevicetoken();
                     },
                   ),
-                  appBar: buildAppBar(context,
-                      isGymOpened: snapshot.data!.get("gym_status"),
-                      gymLocation: snapshot.data!.get("landmark"),
-                      gymname: snapshot.data!.get("name")),
+                  appBar: buildAppBar(
+                    context,
+                    isGymOpened: snapshot.data!.get("gym_status"),
+                    gymLocation: snapshot.data!.get("landmark"),
+                    gymname: snapshot.data!.get("name"),
+                    leadingCallback: () {
+                      if (showBranches == false) {
+                        _drawerkey.currentState!.openDrawer();
+                      }
+                    },
+                  ),
                   drawer: buildDrawer(context),
                   body: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -268,7 +250,8 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                 ),
                 showBranches == false
-                    ? Positioned(
+                    ? Container()
+                    : Positioned(
                         top: 80,
                         left: 51,
                         child: Container(
@@ -277,40 +260,57 @@ class _HomeTabState extends State<HomeTab> {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           width: 280,
-                          height: 300,
+                          height: 200,
                           child: ListView.separated(
-                            itemBuilder: ((context, index) => const ListTile(
-                                  title: Text(
-                                    'Ghaziabad',
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: ((context, index) {
+                              if (index == 9) {
+                                return ListTile(
+                                  trailing: const Icon(
+                                    Icons.add,
+                                    color: Colors.black54,
+                                  ),
+                                  title: const Text(
+                                    'Add another Account',
                                     style: TextStyle(color: Colors.black),
                                   ),
-                                  subtitle: Text(
-                                    'Branch Asansol',
-                                    style: TextStyle(
-                                      color: Color(0xfffBDBDBD),
-                                    ),
+                                  onTap: () {
+                                    print("Add another Login Session");
+                                  },
+                                );
+                              }
+                              return const ListTile(
+                                title: Text(
+                                  'Ghaziabad',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  'Branch Asansol',
+                                  style: TextStyle(
+                                    color: Color(0xfffBDBDBD),
                                   ),
-                                )),
+                                ),
+                              );
+                            }),
                             separatorBuilder: (context, index) => const Divider(
                               color: Color(0xffD6D6D6),
                             ),
-                            itemCount: 4,
+                            itemCount: 10,
                           ),
                         ),
                       )
-                    : Container()
               ],
             );
           }),
     );
   }
 
-  var showBranches = false;
-
   AppBar buildAppBar(BuildContext context,
       {required String? gymname,
       required bool? isGymOpened,
-      required String? gymLocation}) {
+      required String? gymLocation,
+      Function? leadingCallback}) {
     return AppBar(
       toolbarHeight: kToolbarHeight + 80,
       backgroundColor: Colors.transparent,
@@ -318,6 +318,14 @@ class _HomeTabState extends State<HomeTab> {
       iconTheme: const IconThemeData(color: Colors.black),
       titleSpacing: 0,
       elevation: 0,
+      leading: IconButton(
+          onPressed: () {
+            leadingCallback!();
+          },
+          icon: Icon(
+            Icons.menu,
+            color: Colors.black,
+          )),
       title: Text(
         gymname!,
         style: const TextStyle(
@@ -406,9 +414,10 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Drawer buildDrawer(BuildContext context) {
+  Drawer buildDrawer(
+    BuildContext context,
+  ) {
     return Drawer(
-      key: _drawerkey,
       backgroundColor: Colors.white,
       child: Stack(
         // shrinkWrap: true,

@@ -111,15 +111,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 ),
                               ),
                               Row(
-                                children: [
+                                children: const [
                                   CircleAvatar(
                                     radius: 4,
                                     backgroundColor: Colors.green,
                                   ),
-                                  const SizedBox(
+                                   SizedBox(
                                     width: 5,
                                   ),
-                                  const Text(
+                                   Text(
                                     'Active',
                                     style: TextStyle(
                                       fontSize: 12,

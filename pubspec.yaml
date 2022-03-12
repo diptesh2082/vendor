@@ -52,6 +52,7 @@ dev_dependencies:
   geolocator: ^8.2.0
   geocoding: ^2.0.2
   permission_handler: ^9.2.0
+  firebase_messaging: ^11.2.10
   intl: ^0.17.0
   get: ^4.6.1
   provider:
