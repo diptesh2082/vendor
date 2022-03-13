@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vyam_vandor/Services/firebase_messaging.dart';
 import 'package:vyam_vandor/widgets/booking_card.dart';
 import 'package:intl/intl.dart';
 
@@ -63,6 +64,45 @@ class FirebaseFirestoreAPi {
           'booking_status': 'a',
         },
       );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future updateTokenToFirebase() async {
+    try {
+      final token = await FirebaseMessagingApi().getDevicetoken();
+
+      _firestore.collection('product_details').doc().update(
+        {
+          "token": FieldValue.arrayUnion(
+            [
+              token,
+            ],
+          ),
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future checkTokenChange() async {
+    try {
+      final token = await FirebaseMessagingApi().getDevicetoken();
+      DocumentSnapshot res =
+          await _firestore.collection('product_details').doc().get();
+
+      List tokensList = res.get("device_token");
+
+      if (tokensList.contains(token)) {
+        print("Token is present Ready to go");
+      }
+      if (tokensList.isEmpty) {
+        print("The Login is for the first time");
+      } else {
+        print('Token is not present, Cut off all the branches');
+      }
     } catch (e) {
       print(e);
     }
