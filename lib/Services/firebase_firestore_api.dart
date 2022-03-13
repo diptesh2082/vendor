@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyam_vandor/Services/firebase_messaging.dart';
-import 'package:vyam_vandor/widgets/booking_card.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/active_booking.dart';
@@ -69,15 +68,19 @@ class FirebaseFirestoreAPi {
     }
   }
 
-  Future updateTokenToFirebase() async {
+  Future updateTokenToFirebase({String? userID}) async {
     try {
       final token = await FirebaseMessagingApi().getDevicetoken();
-
-      _firestore.collection('product_details').doc().update(
+      print("The token from update token to Firebase Method is below");
+      print(token);
+      _firestore
+          .collection('product_details')
+          .doc(_firebaseAuth.currentUser!.email)
+          .update(
         {
           "token": FieldValue.arrayUnion(
             [
-              token,
+              token!,
             ],
           ),
         },
@@ -90,18 +93,18 @@ class FirebaseFirestoreAPi {
   Future checkTokenChange() async {
     try {
       final token = await FirebaseMessagingApi().getDevicetoken();
-      DocumentSnapshot res =
-          await _firestore.collection('product_details').doc().get();
+      DocumentSnapshot res = await _firestore
+          .collection('product_details')
+          .doc(_firebaseAuth.currentUser!.email)
+          .get();
 
-      List tokensList = res.get("device_token");
+      List tokensList = res.get("token");
 
       if (tokensList.contains(token)) {
         print("Token is present Ready to go");
-      }
-      if (tokensList.isEmpty) {
-        print("The Login is for the first time");
       } else {
-        print('Token is not present, Cut off all the branches');
+        print("The Login is for the first time");
+        await updateTokenToFirebase();
       }
     } catch (e) {
       print(e);

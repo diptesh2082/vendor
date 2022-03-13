@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vyam_vandor/Screens/login_screen.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
-import 'package:vyam_vandor/Services/firebase_messaging.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyam_vandor/app_colors.dart';
 import 'package:vyam_vandor/provider/firebase_streams_docs.dart';
+import 'package:get/get.dart';
 import '../../widgets/active_booking.dart';
 import '../../widgets/booking_card.dart';
 import '../../widgets/drawer_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 import '../../widgets/past_bookings.dart';
 
@@ -29,6 +30,8 @@ class _HomeTabState extends State<HomeTab> {
   void initState() {
     super.initState();
   }
+
+  bool isHeightTobeIncreased = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,8 @@ class _HomeTabState extends State<HomeTab> {
                   backgroundColor: AppColors.backgroundColor,
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
-                      FirebaseMessagingApi().getDevicetoken();
+                      // FirebaseFirestoreAPi().updateTokenToFirebase();
+                      FirebaseFirestoreAPi().checkTokenChange();
                     },
                   ),
                   appBar: buildAppBar(
@@ -260,44 +264,88 @@ class _HomeTabState extends State<HomeTab> {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           width: 280,
-                          height: 200,
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: ((context, index) {
-                              if (index == 9) {
-                                return ListTile(
-                                  trailing: const Icon(
-                                    Icons.add,
-                                    color: Colors.black54,
-                                  ),
-                                  title: const Text(
-                                    'Add another Account',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  onTap: () {
-                                    print("Add another Login Session");
-                                  },
-                                );
-                              }
-                              return const ListTile(
-                                title: Text(
-                                  'Ghaziabad',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  'Branch Asansol',
-                                  style: TextStyle(
-                                    color: Color(0xfffBDBDBD),
-                                  ),
-                                ),
-                              );
-                            }),
-                            separatorBuilder: (context, index) => const Divider(
-                              color: Color(0xffD6D6D6),
-                            ),
-                            itemCount: 10,
-                          ),
+                          height: isHeightTobeIncreased ? 400 : 250,
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('product_details')
+                                  // .where("gym_id",
+                                  //     isEqualTo: FirebaseAuth
+                                  //         .instance.currentUser!.email)
+                                  .where(
+                                    'token',
+                                    arrayContains:
+                                        "enOny3LySKi3SppiNT8B3V:APA91bHV28q5C300EBMX0f2pTWHlvn96OCRzlnZEVo_hAtoIiDEhi_bjakLi5_DFM1XNe9r4qpwxhQIEPsRC0124jGYkMHYVkvNSYbrXuYYN6o17d6HmiPWr1N83gh95IqCNKgEX-zHG",
+                                  )
+                                  .snapshots(),
+                              builder: (context, AsyncSnapshot snapshot) {
+                                //isHeightTobeIncreased
+
+                                if (snapshot.data == null) {
+                                  return Container();
+                                }
+                                if (snapshot.data.docs.length + 2 > 3) {
+                                  isHeightTobeIncreased = true;
+                                }
+                                if (snapshot.data.docs.length + 2 <= 3) {
+                                  isHeightTobeIncreased = false;
+                                }
+                                if (snapshot.data == ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                print(FirebaseAuth.instance.currentUser!.email);
+                                List temp = snapshot.data.docs.toList();
+                                if (temp.isEmpty) {
+                                  return const Center(
+                                    child: Text("No branches to show"),
+                                  );
+                                } else {
+                                  return ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: ((context, index) {
+                                      if (index == snapshot.data.docs.length) {
+                                        return ListTile(
+                                          trailing: const Icon(
+                                            Icons.add,
+                                            color: Colors.black54,
+                                          ),
+                                          title: const Text(
+                                            'Add another Account',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          onTap: () {
+                                            print("Add another Login Session");
+                                            Get.to(
+                                              const LoginScreen(),
+                                            );
+                                          },
+                                        );
+                                      }
+                                      return ListTile(
+                                        title: Text(
+                                          snapshot.data.docs[index]['name'],
+                                          style: const TextStyle(
+                                              color: Colors.black),
+                                        ),
+                                        subtitle: Text(
+                                          snapshot.data.docs[index]['landmark'],
+                                          style: const TextStyle(
+                                            color: Color(0xffBDBDBD),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(
+                                      color: Color(0xffD6D6D6),
+                                    ),
+                                    itemCount: snapshot.data.docs.length + 1,
+                                  );
+                                }
+                              }),
                         ),
                       )
               ],
@@ -322,7 +370,7 @@ class _HomeTabState extends State<HomeTab> {
           onPressed: () {
             leadingCallback!();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.menu,
             color: Colors.black,
           )),

@@ -265,7 +265,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     widget.bookingID, widget.userID);
                           } else {
                             print("Invalid OTP");
-                            Get.showSnackbar(GetSnackBar(
+                            Get.showSnackbar(const GetSnackBar(
                               title: "Invalid OTP",
                               message: "Try it again",
                               isDismissible: true,

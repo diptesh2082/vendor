@@ -51,7 +51,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 child: Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: Row(
                         children: [
                           Image.asset(
@@ -116,10 +116,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                                     radius: 4,
                                     backgroundColor: Colors.green,
                                   ),
-                                   SizedBox(
+                                  SizedBox(
                                     width: 5,
                                   ),
-                                   Text(
+                                  Text(
                                     'Active',
                                     style: TextStyle(
                                       fontSize: 12,
@@ -144,7 +144,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                       height: 15.0,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

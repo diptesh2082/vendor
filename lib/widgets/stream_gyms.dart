@@ -38,7 +38,7 @@ class StreamForAllGyms extends StatelessWidget {
                             color: Colors.red,
                             child: Text(
                               snapshot2.data.docs[index]['name'],
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           );
                         },

@@ -32,6 +32,7 @@ class FirebaseAuthApi {
       //Go to Home Page
       final isLocationAvailable =
           await FirebaseFirestoreAPi().checkIslocationAlreadyUpdated();
+      await FirebaseFirestoreAPi().checkTokenChange();
 
       if (isLocationAvailable) {
         Navigator.pushAndRemoveUntil(
@@ -43,6 +44,8 @@ class FirebaseAuthApi {
         );
       } else {
         //GetLocationScreen
+        print("token Change is called");
+
         Navigator.pushAndRemoveUntil(
           context!,
           MaterialPageRoute(
