@@ -124,8 +124,6 @@ class _HomeTabState extends State<HomeTab> {
                                             bookingPrice: doc[index]
                                                     ['booking_price'] ??
                                                 "",
-                                            //DateFormat.yMMMd().add_jm().format(myDateTime)
-                                            //DateFormat('K:mm:ss').format(dateTime)
                                             bookingdate: DateFormat().format(
                                                 doc[index]['booking_date']
                                                     .toDate()),

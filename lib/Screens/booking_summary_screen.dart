@@ -5,34 +5,22 @@ import 'package:vyam_vandor/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:intl/intl.dart';
+
 class BookingScreen extends StatefulWidget {
-  const BookingScreen(
-      {Key? key,
-      this.otp,
-      this.bookingID = "Def booking Id",
-      this.userID = "def user iD",
-      this.imageUrl = "Assets/Images/rect.png",
-      this.gymName = "def gym name",
-      this.brName = "def br name",
-      this.location = "def loc",
-      this.packageName = "def package name",
-      this.packageDuration = "def package dur",
-      this.startDate = "def start date",
-      this.endDate = "def end date"})
-      : super(key: key);
+  const BookingScreen({
+    Key? key,
+    this.otp,
+    this.bookingID = "Def booking Id",
+    this.userID = "def user iD",
+    this.imageUrl = "Assets/Images/rect.png",
+  }) : super(key: key);
 
   final int? otp;
 
   final String? userID;
   final String? bookingID;
   final String? imageUrl;
-  final String? gymName;
-  final String? brName;
-  final String? location;
-  final String? packageName;
-  final String? packageDuration;
-  final String? startDate;
-  final String? endDate;
 
   @override
   _BookingScreenState createState() => _BookingScreenState();
@@ -78,70 +66,194 @@ class _BookingScreenState extends State<BookingScreen> {
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            children: [
-              //Container 1 for Booking Summary
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Column(
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('bookings')
+                  .doc(widget.userID)
+                  .collection('user_booking')
+                  .doc(widget.bookingID)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return Container();
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return Column(
                   children: [
+                    //Container 1 for Booking Summary
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: Row(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Column(
                         children: [
-                          Image.asset(
-                            widget.imageUrl!,
+                          Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  widget.imageUrl!,
+                                ),
+                                const SizedBox(
+                                  width: 15.0,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${snapshot.data!.get('gym_name')}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15.0,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Image.asset("Assets/Images/marker.png"),
+                                        const SizedBox(
+                                          width: 2.0,
+                                        ),
+                                        const Text(
+                                          'landmark',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 15.0,
+                                    ),
+                                    const SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(
+                                        'Full Address',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                           const SizedBox(
-                            width: 15.0,
+                            height: 10.0,
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                widget.gymName!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 15.0,
-                              ),
-                              Row(
-                                children: [
-                                  Image.asset("Assets/Images/marker.png"),
-                                  const SizedBox(
-                                    width: 2.0,
-                                  ),
-                                  Text(
-                                    widget.brName!,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                          const Divider(
+                            height: 2,
+                            color: Color(0xffE2E2E2),
+                          ),
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      'Workout',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.green),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15.0,
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Text(
-                                  widget.location!,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    Text(
+                                      'Package',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Start date',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Valid upto',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '${snapshot.data.get('booking_plan')}',
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.green),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    Text(
+                                      DateFormat().format(snapshot.data
+                                          .get('booking_date')
+                                          .toDate()),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat().format(snapshot.data
+                                          .get('booking_date')
+                                          .toDate()),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat().format(snapshot.data
+                                          .get('plan_end_duration')
+                                          .toDate()),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -149,334 +261,240 @@ class _BookingScreenState extends State<BookingScreen> {
                     const SizedBox(
                       height: 10.0,
                     ),
-                    const Divider(
-                      height: 2,
-                      color: Color(0xffE2E2E2),
-                    ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
+                    //Container For TextField
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      height: 45,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Stack(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Workout',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.green),
+                          TextFormField(
+                            controller: _controller,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
+                              hintText: 'Enter OTP',
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: Color(0xffC9C9C9),
                               ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(
-                                'Package',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                'Start date',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                'Valid upto',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                widget.packageName!,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.green),
-                              ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(
-                                widget.packageDuration!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
+                          Positioned(
+                            right: 20,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                //Function for Verifying OTP
+
+                                if (int.parse(_controller!.text) ==
+                                    widget.otp) {
+                                  print("The otp is Verified");
+                                  Get.to(
+                                    const OrderDetails(),
+                                  );
+                                  await FirebaseFirestoreAPi()
+                                      .acceptandUpdatebookingStatus(
+                                          widget.bookingID, widget.userID);
+                                } else {
+                                  print("Invalid OTP");
+                                  Get.showSnackbar(const GetSnackBar(
+                                    title: "Invalid OTP",
+                                    message: "Try it again",
+                                    isDismissible: true,
+                                    backgroundColor: Colors.black,
+                                  ));
+                                }
+                              },
+                              child: const Text(
+                                'Verify',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                widget.startDate!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    AppColors.bottomNaVBarTextColor),
                               ),
-                              Text(
-                                widget.endDate!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              //Container For TextField
-              Container(
-                height: 45,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Stack(
-                  children: [
-                    TextFormField(
-                      controller: _controller,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        hintText: 'Enter OTP',
-                        hintStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: Color(0xffC9C9C9),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 20,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          //Function for Verifying OTP
-
-                          if (int.parse(_controller!.text) == widget.otp) {
-                            print("The otp is Verified");
-                            Get.to(
-                              const OrderDetails(),
-                            );
-                            await FirebaseFirestoreAPi()
-                                .acceptandUpdatebookingStatus(
-                                    widget.bookingID, widget.userID);
-                          } else {
-                            print("Invalid OTP");
-                            Get.showSnackbar(const GetSnackBar(
-                              title: "Invalid OTP",
-                              message: "Try it again",
-                              isDismissible: true,
-                              backgroundColor: Colors.black,
-                            ));
-                          }
-                        },
-                        child: const Text(
-                          'Verify',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              AppColors.bottomNaVBarTextColor),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ), //Container For payment
-              const SizedBox(
-                height: 10.0,
-              ),
-              //Container For Pricing
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 10,
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Payment',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.green,
-                      ),
-                    ),
+                    ), //Container For payment
                     const SizedBox(
                       height: 10.0,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          'Total Amount',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          '\$ 0.0',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff3A3A3A),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          'Discount',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          '\$ 0.0',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff3A3A3A),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      'Promo code',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                    //Container For Pricing
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 10,
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          'Grand Total',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.green,
-                          ),
-                        ),
-                        Text(
-                          '\$ 100.0',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              //Container For Customer Details
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                width: MediaQuery.of(context).size.width,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('user_details')
-                        .doc(widget.userID)
-                        .snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.data == null) {
-                        return Container();
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      return Column(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Customers Details',
+                            'Payment',
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xff3A3A3A)),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.green,
+                            ),
                           ),
                           const SizedBox(
                             height: 10.0,
                           ),
-                          Text(
-                            'Username: ${snapshot.data.get("name")}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Total Amount',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                '\$ ${snapshot.data.get('booking_price')}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xff3A3A3A),
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Phone Number: ${snapshot.data.get('userId')}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Discount',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                '\$ ${snapshot.data.get('discount')}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xff3A3A3A),
+                                ),
+                              ),
+                            ],
                           ),
                           const Text(
-                            'Payment Method : Cash',
+                            'Promo code',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
                             ),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Grand Total',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              Text(
+                                '\$ ${snapshot.data.get('grand_total')}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
-                      );
-                    }),
-              )
-            ],
-          ),
+                      ),
+                    ),
+                    //Container For Customer Details
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('user_details')
+                              .doc(widget.userID)
+                              .snapshots(),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot2) {
+                            if (snapshot2.data == null) {
+                              return Container();
+                            }
+                            if (snapshot2.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Customers Details',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff3A3A3A)),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  'Username: ${snapshot2.data.get("name")}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  'Phone Number: ${snapshot2.data.get('userId')}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const Text(
+                                  'Payment Method : Cash',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                    )
+                  ],
+                );
+              }),
         ),
       ),
     );

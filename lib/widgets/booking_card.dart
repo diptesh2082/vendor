@@ -91,10 +91,6 @@ class _BookingCardState extends State<BookingCard> {
                       otp: widget.otp,
                       bookingID: widget.bookingID,
                       userID: widget.userID,
-                      packageName: widget.bookingPlan,
-                      startDate: widget.bookingdate,
-                      endDate: widget.bookingdate,
-                      location: "Location is to be Added",
                     ),
                   );
                 },
