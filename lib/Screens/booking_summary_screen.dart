@@ -3,15 +3,36 @@ import 'package:vyam_vandor/Screens/order_details_screen.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 import 'package:vyam_vandor/app_colors.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookingScreen extends StatefulWidget {
-  const BookingScreen({Key? key, this.otp, this.bookingID, this.userID})
+  const BookingScreen(
+      {Key? key,
+      this.otp,
+      this.bookingID = "Def booking Id",
+      this.userID = "def user iD",
+      this.imageUrl = "Assets/Images/rect.png",
+      this.gymName = "def gym name",
+      this.brName = "def br name",
+      this.location = "def loc",
+      this.packageName = "def package name",
+      this.packageDuration = "def package dur",
+      this.startDate = "def start date",
+      this.endDate = "def end date"})
       : super(key: key);
 
   final int? otp;
 
   final String? userID;
   final String? bookingID;
+  final String? imageUrl;
+  final String? gymName;
+  final String? brName;
+  final String? location;
+  final String? packageName;
+  final String? packageDuration;
+  final String? startDate;
+  final String? endDate;
 
   @override
   _BookingScreenState createState() => _BookingScreenState();
@@ -72,7 +93,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: Row(
                         children: [
                           Image.asset(
-                            'Assets/Images/rect.png',
+                            widget.imageUrl!,
                           ),
                           const SizedBox(
                             width: 15.0,
@@ -81,9 +102,9 @@ class _BookingScreenState extends State<BookingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Transformers Gym',
-                                style: TextStyle(
+                              Text(
+                                widget.gymName!,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -97,9 +118,9 @@ class _BookingScreenState extends State<BookingScreen> {
                                   const SizedBox(
                                     width: 2.0,
                                   ),
-                                  const Text(
-                                    'Barakar',
-                                    style: TextStyle(
+                                  Text(
+                                    widget.brName!,
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -109,12 +130,12 @@ class _BookingScreenState extends State<BookingScreen> {
                               const SizedBox(
                                 height: 15.0,
                               ),
-                              const SingleChildScrollView(
+                              SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Text(
-                                  'Bus stand, Barvsdv',
+                                  widget.location!,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -182,36 +203,36 @@ class _BookingScreenState extends State<BookingScreen> {
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
-                            children: const [
+                            children: [
                               Text(
-                                'Gym- 3 months',
-                                style: TextStyle(
+                                widget.packageName!,
+                                style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.green),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
-                                '3 months',
-                                style: TextStyle(
+                                widget.packageDuration!,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
                                 ),
                               ),
                               Text(
-                                'Feb 11, 2022',
-                                style: TextStyle(
+                                widget.startDate!,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
                                 ),
                               ),
                               Text(
-                                'May 11, 2022',
-                                style: TextStyle(
+                                widget.endDate!,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
@@ -400,45 +421,59 @@ class _BookingScreenState extends State<BookingScreen> {
                 width: MediaQuery.of(context).size.width,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Customers Details',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xff3A3A3A)),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      'Username: John Doe',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      'Phone Number: 078-66-555',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      'Payment Method : Cash',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('user_details')
+                        .doc(widget.userID)
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.data == null) {
+                        return Container();
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Customers Details',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xff3A3A3A)),
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(
+                            'Username: ${snapshot.data.get("name")}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            'Phone Number: ${snapshot.data.get('userId')}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const Text(
+                            'Payment Method : Cash',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
               )
             ],
           ),

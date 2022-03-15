@@ -10,6 +10,7 @@ import '../../widgets/active_booking.dart';
 import '../../widgets/booking_card.dart';
 import '../../widgets/drawer_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../../widgets/past_bookings.dart';
 
@@ -123,10 +124,13 @@ class _HomeTabState extends State<HomeTab> {
                                             bookingPrice: doc[index]
                                                     ['booking_price'] ??
                                                 "",
-                                            bookingdate: doc[index]
-                                                    ['booking_date'] ??
-                                                "",
-                                            otp: doc[index]['otp_pass'],
+                                            //DateFormat.yMMMd().add_jm().format(myDateTime)
+                                            //DateFormat('K:mm:ss').format(dateTime)
+                                            bookingdate: DateFormat().format(
+                                                doc[index]['booking_date']
+                                                    .toDate()),
+                                            otp: int.parse(
+                                                doc[index]['otp_pass']),
                                           );
                                         }
                                         return Container();
@@ -278,8 +282,6 @@ class _HomeTabState extends State<HomeTab> {
                                   )
                                   .snapshots(),
                               builder: (context, AsyncSnapshot snapshot) {
-                                //isHeightTobeIncreased
-
                                 if (snapshot.data == null) {
                                   return Container();
                                 }

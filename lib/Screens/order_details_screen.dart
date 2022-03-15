@@ -46,8 +46,9 @@ class _OrderDetailsState extends State<OrderDetails> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 child: Column(
                   children: [
                     Container(

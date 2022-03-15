@@ -81,25 +81,22 @@ class _BookingCardState extends State<BookingCard> {
                 onPressed: () async {
                   print("The otp for booking is : ");
                   print(widget.otp);
+                  print(widget.bookingID);
+                  print(widget.userID);
+                  print(widget.bookingPlan);
+                  print(widget.bookingdate);
+
                   Get.to(
                     () => BookingScreen(
                       otp: widget.otp,
                       bookingID: widget.bookingID,
                       userID: widget.userID,
+                      packageName: widget.bookingPlan,
+                      startDate: widget.bookingdate,
+                      endDate: widget.bookingdate,
+                      location: "Location is to be Added",
                     ),
-                    arguments: {
-                      "otp_pass": widget.otp,
-                    },
                   );
-                  // try {
-                  //   print(widget.bookingID!);
-                  //   await FirebaseFirestoreAPi()
-                  //       .acceptUpCmingBookings(id: widget.bookingID!);
-                  //   FirebaseFirestoreAPi().getUpActiveBookings();
-                  //   FirebaseFirestoreAPi().getUpComingBookings();
-                  // } catch (e) {
-                  //   print(e);
-                  // }
                 },
                 child: const Text(
                   'Accept',
