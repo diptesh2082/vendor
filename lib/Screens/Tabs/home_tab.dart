@@ -168,21 +168,22 @@ class _HomeTabState extends State<HomeTab> {
                                             doc[index]['booking_accepted'] ==
                                                 true) {
                                           return ActiveBookingCard(
-                                            userID: doc[index]['userId'] ?? "",
-                                            userName:
-                                                doc[index]['user_name'] ?? "",
-                                            bookingID:
-                                                doc[index]['booking_id'] ?? "",
-                                            bookingPlan: doc[index]
-                                                    ['booking_plan'] ??
-                                                "",
-                                            bookingPrice: doc[index]
-                                                    ['booking_price'] ??
-                                                "",
-                                            bookingdate: doc[index]
-                                                    ['booking_date'] ??
-                                                "",
-                                          );
+                                              userID:
+                                                  doc[index]['userId'] ?? "",
+                                              userName:
+                                                  doc[index]['user_name'] ?? "",
+                                              bookingID: doc[index]
+                                                      ['booking_id'] ??
+                                                  "",
+                                              bookingPlan: doc[index]
+                                                      ['booking_plan'] ??
+                                                  "",
+                                              bookingPrice: doc[index]
+                                                      ['booking_price'] ??
+                                                  "",
+                                              bookingdate: DateFormat().format(
+                                                  doc[index]['booking_date']
+                                                      .toDate()));
                                         }
                                         return Container();
                                       },
