@@ -259,7 +259,8 @@ class _MonthSalesState extends State<MonthSales> {
                       ),
                       StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collectionGroup('user_booking')
+                            .collection('bookings')
+                            .where("vendorId",isEqualTo: gymId)
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot snap) {
@@ -290,9 +291,9 @@ class _MonthSalesState extends State<MonthSales> {
                                   // &&
                                   // doc[index]['booking_accepted'] ==
                                   //     true
-                                  &&
-                                  doc[index]["vendorId"] ==
-                                      gymId.toString()
+                                  // &&
+                                  // doc[index]["vendorId"] ==
+                                  //     gymId.toString()
                                   && doc[index]["booking_date"].toDate().difference(DateTime.now()).inDays>-30
                               )
                               {

@@ -11,3 +11,6 @@ List <GymModel> gymLists = [
   GymModel(id: 3, name: "GymX Studios", location: "Asansol 2.3", address: "Bus stand, Barakar", review: "4.7 (13 reviews)", image: "assets/photos/gym.jpg", lat: 23.6823747, lon: 86.9817005),
 ];
 }
+class BookingController extends GetxController{
+  var booking=0.obs;
+}

@@ -259,7 +259,8 @@ class _DaysSalesState extends State<DaysSales> {
                       ),
                       StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collectionGroup('user_booking')
+                            .collection('bookings')
+                            .where("vendorId",isEqualTo: gymId)
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot snap) {

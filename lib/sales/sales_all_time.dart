@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 import 'package:vyam_vandor/constants.dart';
+import 'package:vyam_vandor/controllers/gym_controller.dart';
 import 'package:vyam_vandor/widgets/active_booking.dart';
 import 'package:vyam_vandor/widgets/card_details.dart';
 
@@ -22,6 +23,13 @@ class AllTimeSales extends StatefulWidget {
 }
 
 class _AllTimeSalesState extends State<AllTimeSales> {
+  BookingController bookingController = Get.put(BookingController());
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    bookingController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     String salesTotal = '\$260';
@@ -39,7 +47,9 @@ class _AllTimeSalesState extends State<AllTimeSales> {
 
     // return stream;
     // }
+    var bookings=0;
     int sum = 0;
+
     return Scaffold(
       backgroundColor: kScaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -259,7 +269,8 @@ class _AllTimeSalesState extends State<AllTimeSales> {
                           ),
                           StreamBuilder(
                             stream: FirebaseFirestore.instance
-                                .collectionGroup('user_booking')
+                                .collection('bookings')
+                            .where("vendorId",isEqualTo: gymId)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot snap) {
@@ -273,22 +284,28 @@ class _AllTimeSalesState extends State<AllTimeSales> {
                                 return const Text("No Active Bookings");
                               }
                               var doc = snap.data.docs;
+                              // if (snap.hasData){
+                              //
+                              // }
+
                               return ListView.builder(
                                 physics:
                                 const BouncingScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: doc.length,
                                 itemBuilder: (context, index) {
+
                                   if (doc[index]['booking_status'] ==
                                       'active' || doc[index]['booking_status'] =='completed'
                                       // &&
                                       // doc[index]['booking_accepted'] ==
                                       //     true
-                                      &&
-                                      doc[index]["vendorId"] ==
-                                          gymId.toString()
+                                      // &&
+                                      // doc[index]["vendorId"] ==
+                                      //     gymId.toString()
                                   )
                                   {
+
                                     return GestureDetector(
                                       onTap: () async {
                                         // print("wewe");
@@ -343,6 +360,7 @@ class _AllTimeSalesState extends State<AllTimeSales> {
                                       ),
                                     );
                                   }
+
                                   return Container();
                                 },
                               );
