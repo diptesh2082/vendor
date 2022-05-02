@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vyam_vandor/Screens/Tabs/dashboardTab/amenities.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -426,18 +427,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     ])),
                           )),
                       // Amenities//
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: ((context, index) {
-                            return amenities(index);
-                          }),
-                          separatorBuilder: (context, _) => SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.03,
-                          ),
-                          itemCount: amenities_name.length,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: const Text(
+                          'Amenities',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: "Poppins",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
                         ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 100,
+                        child: Amenites(),
                       ),
                       //Address//
                       const Padding(

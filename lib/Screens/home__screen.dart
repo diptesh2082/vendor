@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:vyam_vandor/Screens/Tabs/Insights/insights.dart';
-import 'package:vyam_vandor/Screens/Tabs/dashboard_tab.dart';
+import 'package:vyam_vandor/Screens/Tabs/dashboardTab/dashboard_tab.dart';
 import 'package:vyam_vandor/Screens/Tabs/home_tab.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 import 'package:vyam_vandor/app_colors.dart';
