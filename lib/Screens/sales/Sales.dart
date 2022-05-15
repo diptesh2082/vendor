@@ -6,14 +6,16 @@ import 'package:vyam_vandor/sales/sales_7days.dart';
 import 'package:vyam_vandor/sales/sales_all_time.dart';
 import 'package:vyam_vandor/sales/sales_month.dart';
 
-class TotalBookings extends StatefulWidget {
-  const TotalBookings({Key? key}) : super(key: key);
+import 'DaysFilter.dart';
+
+class Sales extends StatefulWidget {
+  const Sales({Key? key}) : super(key: key);
 
   @override
-  _TotalBookingsState createState() => _TotalBookingsState();
+  _SalesState createState() => _SalesState();
 }
 
-class _TotalBookingsState extends State<TotalBookings> {
+class _SalesState extends State<Sales> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +65,9 @@ class _TotalBookingsState extends State<TotalBookings> {
                     ),
                     radius: 8,
                     tabs: const [
-                      Tab(text: 'Upcoming',),
-                      Tab(text: 'Active',),
-                      Tab(text: 'Completed',),
+                      Tab(text: 'AllTime',),
+                      Tab(text: '7 Days',),
+                      Tab(text: 'Month',),
                     ],
                   ),
                 ),
@@ -77,8 +79,8 @@ class _TotalBookingsState extends State<TotalBookings> {
                   child:  TabBarView(
                     children: [
                       UpcomingBookings(),
-                      ActivBookings(),
-                      MonthSales(),
+                      DaysFilter(),
+                      DaysFilter(),
                     ],
                   ),
                 ),

@@ -168,7 +168,7 @@ class _InsightsTabState extends State<InsightsTab> {
         ),
         body:  TabBarView(
             physics: NeverScrollableScrollPhysics(),
-            children: [AllTime(), AllTimeSales(),DaysSales(),MonthSales(),]),
+            children: [AllTime(), UpcomingBookings(),ActivBookings(),MonthSales(),]),
       ),
     );
   }

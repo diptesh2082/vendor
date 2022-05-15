@@ -7,27 +7,30 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:vyam_vandor/Services/firebase_firestore_api.dart';
 import 'package:vyam_vandor/constants.dart';
+import 'package:vyam_vandor/controllers/gym_controller.dart';
 import 'package:vyam_vandor/widgets/active_booking.dart';
 import 'package:vyam_vandor/widgets/card_details.dart';
 
-import '../Screens/home__screen.dart';
-import '../Screens/login_screen.dart';
-import '../Screens/order_details_screen.dart';
+import '../order_details_screen.dart';
 
-class MonthSales extends StatefulWidget {
-  const MonthSales({Key? key}) : super(key: key);
+// import '../Screens/home__screen.dart';
+// import '../Screens/login_screen.dart';
+// import '../Screens/order_details_screen.dart';
+
+class AllTimeSales extends StatefulWidget {
+  const AllTimeSales({Key? key}) : super(key: key);
 
   @override
-  State<MonthSales> createState() => _MonthSalesState();
+  State<AllTimeSales> createState() => _AllTimeSalesState();
 }
 
-class _MonthSalesState extends State<MonthSales> {
-  // bool isLoading=true;
-  @override
-  void initState() {
-    // TODO: implement initState
+class _AllTimeSalesState extends State<AllTimeSales> {
 
-    super.initState();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    // bookingController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -46,8 +49,9 @@ class _MonthSalesState extends State<MonthSales> {
 
     // return stream;
     // }
-
+    var bookings=0;
     int sum = 0;
+
     return Scaffold(
       backgroundColor: kScaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -55,19 +59,17 @@ class _MonthSalesState extends State<MonthSales> {
           alignment: Alignment.topCenter,
           child: Container(
             width: MediaQuery.of(context).size.width*.92,
-            child:Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
               children: [
                 SizedBox(
                   height: 10,
                 ),
-                StreamBuilder<QuerySnapshot>(
+                StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('bookings')
                       .where("vendorId",isEqualTo: gymId)
                       .orderBy("booking_date",descending: true)
-                      .where("booking_status".toLowerCase(),isEqualTo: "completed")
+                      .where("booking_status".toLowerCase(),isEqualTo: "upcoming")
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot snap) {
@@ -78,7 +80,7 @@ class _MonthSalesState extends State<MonthSales> {
                       );
                     }
                     if (snap.data == null) {
-                      return const Text("No Completed Bookings");
+                      return const Text("No Active Bookings");
                     }
                     var doc = snap.data.docs;
                     // if (snap.hasData){
@@ -86,24 +88,24 @@ class _MonthSalesState extends State<MonthSales> {
                     // }
 
                     return doc.length==0?
-                    const Text("No Completed Bookings"):
-                      ListView.builder(
+                    const Text("No Upcoming Bookings"):
+                    ListView.builder(
                       physics:
                       const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: doc.length,
                       itemBuilder: (context, index) {
 
-                        // if (doc[index]['booking_status'] ==
-                        //     'active' || doc[index]['booking_status'] =='completed'
-                        //     || doc[index]['booking_status'] =='upcoming'
-                        // // &&
-                        // // doc[index]['booking_accepted'] ==
-                        // //     true
-                        // // &&
-                        // // doc[index]["vendorId"] ==
-                        // //     gymId.toString()
-                        // )
+                        if (doc[index]['booking_status'] ==
+                            'active' || doc[index]['booking_status'] =='completed'
+                            || doc[index]['booking_status'] =='upcoming'
+                        // &&
+                        // doc[index]['booking_accepted'] ==
+                        //     true
+                        // &&
+                        // doc[index]["vendorId"] ==
+                        //     gymId.toString()
+                        )
                         {
 
                           return GestureDetector(

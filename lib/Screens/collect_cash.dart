@@ -113,7 +113,8 @@ class CollectCashPage extends StatelessWidget {
                     .doc(bookingID)
                     .update({
                   "booking_accepted": true,
-                  "booking_status":"active"
+                  "booking_status":"active",
+                  "payment_done":true
                 });
                 Get.off(
                   OrderDetails(

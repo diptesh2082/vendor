@@ -58,6 +58,7 @@ dependencies:
   url_launcher: ^6.1.0
   font_awesome_flutter: ^10.1.0
   auto_size_text: ^3.0.0
+  percent_indicator: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -117,9 +118,9 @@ flutter:
     - family: Profileicon
       fonts:
       - asset: Assets/Images/Profileicon.ttf
-    - family: PoppinsSemiBold
-      fonts:
-        - asset: Assets\Fonts\Poppins-SemiBold.ttf
+#    - family: PoppinsSemiBold
+#      fonts:
+#        - asset: Assets\Fonts\Poppins-SemiBold.ttf
 
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
